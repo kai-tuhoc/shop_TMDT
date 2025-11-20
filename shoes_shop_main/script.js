@@ -28,7 +28,12 @@ const closeCart = document.querySelector(".close-cart");
 const cartItemsContainer = document.querySelector(".cart-items");
 const cartTotal = document.querySelector("#cart-total");
 
-let cart = [];
+let cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+// Hàm lưu cart vào localStorage
+function saveCart() {
+  localStorage.setItem("cart", JSON.stringify(cart));
+}
 
 // Mở / đóng giỏ hàng
 cartIcon.addEventListener("click", () => {
@@ -53,7 +58,9 @@ function renderCart() {
             <img src="${item.img}" alt="">
             <div class="item-info">
                 <h5>${item.name}</h5>
-                <p>${item.price.toLocaleString()}đ</p>
+                <p><strong>Giá:</strong> ${item.price.toLocaleString()}đ</p>
+                <p><strong>Size:</strong> ${item.size || "—"}</p>
+                <p><strong>Số lượng:</strong> ${item.quantity}</p>
             </div>
             <div class="item-quantity">
                 <button onclick="changeQuantity(${index}, -1)">-</button>
@@ -68,12 +75,13 @@ function renderCart() {
                 <button onclick="changeQuantity(${index}, 1)">+</button>
             </div>
 
-            <i class="fa-solid fa-trash" style="cursor:pointer;color:red;" onclick="removeItem(${index})"></i>
+            <i class="fa-solid fa-trash" style="cursor:pointer;color:red;font-size:18px;" onclick="removeItem(${index})" title="Xóa sản phẩm"></i>
         `;
     cartItemsContainer.appendChild(div);
   });
 
   cartTotal.innerText = total.toLocaleString() + "đ";
+  saveCart();
 }
 
 // Thay đổi số lượng
@@ -107,18 +115,7 @@ function updateQuantity(index, value) {
   }
   renderCart();
 }
-const checkout_btn = document.querySelector(".checkout-btn");
 
-let input = () => {
-  const input_quantity = document.querySelector(".input_quantity");
-  return input_quantity ? input_quantity.value : 0;
-};
-// console.log(checkout_btn);
-checkout_btn.addEventListener("click", () => {
-  if (input() >= 100) {
-    alert(" nhiều quá !");
-  }
-});
 // Xóa sản phẩm
 function removeItem(index) {
   cart.splice(index, 1);
@@ -153,11 +150,21 @@ function performSearch() {
     const nameSP = nameEl.textContent.toLowerCase().trim();
 
     // Lấy tất cả thông tin từ data attributes
-    const material = card.dataset.material ? card.dataset.material.toLowerCase().trim() : "";
-    const color = card.dataset.color ? card.dataset.color.toLowerCase().trim() : "";
-    const description = card.dataset.description ? card.dataset.description.toLowerCase().trim() : "";
-    const origin = card.dataset.origin ? card.dataset.origin.toLowerCase().trim() : "";
-    const durability = card.dataset.durability ? card.dataset.durability.toLowerCase().trim() : "";
+    const material = card.dataset.material
+      ? card.dataset.material.toLowerCase().trim()
+      : "";
+    const color = card.dataset.color
+      ? card.dataset.color.toLowerCase().trim()
+      : "";
+    const description = card.dataset.description
+      ? card.dataset.description.toLowerCase().trim()
+      : "";
+    const origin = card.dataset.origin
+      ? card.dataset.origin.toLowerCase().trim()
+      : "";
+    const durability = card.dataset.durability
+      ? card.dataset.durability.toLowerCase().trim()
+      : "";
 
     // Kiểm tra xem có khớp với bất kỳ thông tin nào không
     const matched =
@@ -269,7 +276,9 @@ function renderCategoryProducts(category, containerId) {
     item.className = "col-lg-3 pos-re";
     const materialText = p.material ? p.material : "";
     const colorText = p.color ? p.color : "";
-    const descriptionText = p.description ? p.description.substring(0, 50) + "..." : "";
+    const descriptionText = p.description
+      ? p.description.substring(0, 50) + "..."
+      : "";
     const originText = p.origin ? p.origin : "";
     item.innerHTML = `
         <div class="product-card" data-material="${materialText}" data-color="${colorText}" 
@@ -281,8 +290,16 @@ function renderCategoryProducts(category, containerId) {
             <div class="product-overlay">
                 <p><strong>Chất liệu:</strong> ${materialText || "—"}</p>
                 <p><strong>Màu:</strong> ${colorText || "—"}</p>
-                ${originText ? `<p><strong>Xuất xứ:</strong> ${originText}</p>` : ""}
-                ${descriptionText ? `<p><strong>Mô tả:</strong> ${descriptionText}</p>` : ""}
+                ${
+                  originText
+                    ? `<p><strong>Xuất xứ:</strong> ${originText}</p>`
+                    : ""
+                }
+                ${
+                  descriptionText
+                    ? `<p><strong>Mô tả:</strong> ${descriptionText}</p>`
+                    : ""
+                }
             </div>
             <h3 class="product-name">${p.name}</h3>
             <p class="price">${p.price.toLocaleString()}đ</p>
@@ -390,9 +407,9 @@ initAdminMode();
 admin.addEventListener("click", () => {
   btn_test = !btn_test;
   localStorage.setItem("btn_test", btn_test);
-  
+
   const btn_add = document.querySelectorAll(".btn-add");
-  
+
   if (btn_test) {
     admin.textContent = "Admin";
     btn_add.forEach((child) => {
@@ -404,7 +421,7 @@ admin.addEventListener("click", () => {
       child.style.display = "none";
     });
   }
-  
+
   updateDeleteButtonVisibility();
 });
 
@@ -540,9 +557,6 @@ addToCartBtn.addEventListener("click", () => {
   }
 
   renderCart();
-  // cũng lưu tạm vào localStorage để duy trì nếu reload
-  localStorage.setItem("cart", JSON.stringify(cart));
-
   detailModal.style.display = "none";
 });
 
