@@ -336,6 +336,7 @@ function renderAll() {
   renderCategoryProducts("nu", "productListNu"); // Giày Nữ
   renderCategoryProducts("unisex", "productListUnisex"); // Giày Unisex
   attachDeleteEvents();
+  updateDeleteButtonVisibility();
 }
 renderAll();
 
@@ -356,34 +357,55 @@ function attachDeleteEvents() {
   });
 }
 
+function updateDeleteButtonVisibility() {
+  const deleteButtons = document.querySelectorAll(".delete");
+  const isAdmin = localStorage.getItem("btn_test") === "true";
+  deleteButtons.forEach((btn) => {
+    btn.style.display = isAdmin ? "block" : "none";
+  });
+}
+
 // admin
 const admin = document.querySelector(".header__btn-admin");
-const product_card = document.querySelectorAll(".product-card");
-const btn_add = document.querySelectorAll(".btn-add");
 let btn_test = localStorage.getItem("btn_test") === "true";
 
-admin.addEventListener("click", () => {
+// Update UI khi page load
+function initAdminMode() {
+  const btn_add = document.querySelectorAll(".btn-add");
   if (btn_test) {
-    admin.textContent = "Khách";
-    product_card.forEach((child) => {
-      const delete_btn = child.querySelector(".delete");
-      if (delete_btn) delete_btn.style.display = "none";
-    });
-    btn_add.forEach((child) => {
-      child.style.display = "none";
-    });
-  } else {
     admin.textContent = "Admin";
-    product_card.forEach((child) => {
-      const delete_btn = child.querySelector(".delete");
-      if (delete_btn) delete_btn.style.display = "block";
-    });
     btn_add.forEach((child) => {
       child.style.display = "block";
     });
+  } else {
+    admin.textContent = "Khách";
+    btn_add.forEach((child) => {
+      child.style.display = "none";
+    });
   }
+  updateDeleteButtonVisibility();
+}
+initAdminMode();
+
+admin.addEventListener("click", () => {
   btn_test = !btn_test;
   localStorage.setItem("btn_test", btn_test);
+  
+  const btn_add = document.querySelectorAll(".btn-add");
+  
+  if (btn_test) {
+    admin.textContent = "Admin";
+    btn_add.forEach((child) => {
+      child.style.display = "block";
+    });
+  } else {
+    admin.textContent = "Khách";
+    btn_add.forEach((child) => {
+      child.style.display = "none";
+    });
+  }
+  
+  updateDeleteButtonVisibility();
 });
 
 //  phần size sản phẩm
