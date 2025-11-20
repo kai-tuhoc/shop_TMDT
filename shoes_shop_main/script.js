@@ -146,13 +146,28 @@ function performSearch() {
     return;
   }
 
-  // kiểm tra: nếu tên sản phẩm chứa chuỗi tìm kiếm (substring) -> hiện
+  // kiểm tra: tìm kiếm trong tất cả thông tin sản phẩm
   let anyShown = false;
   allProducts.forEach((card) => {
     const nameEl = card.querySelector(".product-name");
     const nameSP = nameEl.textContent.toLowerCase().trim();
 
-    const matched = nameSP.includes(input_value);
+    // Lấy tất cả thông tin từ data attributes
+    const material = card.dataset.material ? card.dataset.material.toLowerCase().trim() : "";
+    const color = card.dataset.color ? card.dataset.color.toLowerCase().trim() : "";
+    const description = card.dataset.description ? card.dataset.description.toLowerCase().trim() : "";
+    const origin = card.dataset.origin ? card.dataset.origin.toLowerCase().trim() : "";
+    const durability = card.dataset.durability ? card.dataset.durability.toLowerCase().trim() : "";
+
+    // Kiểm tra xem có khớp với bất kỳ thông tin nào không
+    const matched =
+      nameSP.includes(input_value) ||
+      material.includes(input_value) ||
+      color.includes(input_value) ||
+      description.includes(input_value) ||
+      origin.includes(input_value) ||
+      durability.includes(input_value);
+
     if (matched) {
       card.parentElement.classList.remove("fade");
       anyShown = true;
@@ -239,6 +254,9 @@ const priceInput = document.getElementById("price");
 const imageInput = document.getElementById("image");
 const materialInput = document.getElementById("material");
 const colorInput = document.getElementById("color");
+const descriptionInput = document.getElementById("description");
+const originInput = document.getElementById("origin");
+const durabilityInput = document.getElementById("durability");
 const productList = document.getElementById("productList");
 
 // hàm hiển thị  sản phẩm
@@ -251,13 +269,20 @@ function renderCategoryProducts(category, containerId) {
     item.className = "col-lg-3 pos-re";
     const materialText = p.material ? p.material : "";
     const colorText = p.color ? p.color : "";
+    const descriptionText = p.description ? p.description.substring(0, 50) + "..." : "";
+    const originText = p.origin ? p.origin : "";
     item.innerHTML = `
-        <div class="product-card" data-material="${materialText}" data-color="${colorText}">
+        <div class="product-card" data-material="${materialText}" data-color="${colorText}" 
+             data-description="${p.description || ""}" data-origin="${
+      p.origin || ""
+    }" data-durability="${p.durability || ""}">
             <div><button class="delete" data-category="${category}" data-index="${index}">×</button></div>
             <img src="${p.image}" alt="${p.name}">
             <div class="product-overlay">
                 <p><strong>Chất liệu:</strong> ${materialText || "—"}</p>
                 <p><strong>Màu:</strong> ${colorText || "—"}</p>
+                ${originText ? `<p><strong>Xuất xứ:</strong> ${originText}</p>` : ""}
+                ${descriptionText ? `<p><strong>Mô tả:</strong> ${descriptionText}</p>` : ""}
             </div>
             <h3 class="product-name">${p.name}</h3>
             <p class="price">${p.price.toLocaleString()}đ</p>
@@ -281,6 +306,9 @@ form.addEventListener("submit", (e) => {
     image: imageInput.value,
     material: materialInput ? materialInput.value : "",
     color: colorInput ? colorInput.value : "",
+    description: descriptionInput ? descriptionInput.value : "",
+    origin: originInput ? originInput.value : "",
+    durability: durabilityInput ? durabilityInput.value : "",
   };
 
   if (currentCategory) {
@@ -383,11 +411,24 @@ document.addEventListener("click", function (e) {
     const price = card.querySelector("p").textContent;
     const material = card.dataset.material || "";
     const color = card.dataset.color || "";
+    const description = card.dataset.description || "";
+    const origin = card.dataset.origin || "";
+    const durability = card.dataset.durability || "";
 
     // normalize price (numeric) for cart operations
     const priceNum = parseInt(price.replace(/[^\d]/g, "")) || 0;
 
-    selectedProduct = { img, name, price, priceNum, material, color };
+    selectedProduct = {
+      img,
+      name,
+      price,
+      priceNum,
+      material,
+      color,
+      description,
+      origin,
+      durability,
+    };
 
     detailImage.src = img;
     detailName.textContent = name;
@@ -395,9 +436,23 @@ document.addEventListener("click", function (e) {
     // hiển thị material & color
     const detailMaterialEl = document.getElementById("detailMaterial");
     const detailColorEl = document.getElementById("detailColor");
+    const detailDescriptionEl = document.getElementById("detailDescription");
+    const detailOriginEl = document.getElementById("detailOrigin");
+    const detailDurabilityEl = document.getElementById("detailDurability");
+
     if (detailMaterialEl)
       detailMaterialEl.textContent = material ? `Chất liệu: ${material}` : "";
     if (detailColorEl) detailColorEl.textContent = color ? `Màu: ${color}` : "";
+    if (detailDescriptionEl)
+      detailDescriptionEl.textContent = description
+        ? `Mô tả: ${description}`
+        : "";
+    if (detailOriginEl)
+      detailOriginEl.textContent = origin ? `Xuất xứ: ${origin}` : "";
+    if (detailDurabilityEl)
+      detailDurabilityEl.textContent = durability
+        ? `Độ bền: ${durability}`
+        : "";
 
     selectedSize = null; // reset
 
@@ -448,6 +503,9 @@ addToCartBtn.addEventListener("click", () => {
     size: selectedSize,
     material: selectedProduct.material || "",
     color: selectedProduct.color || "",
+    description: selectedProduct.description || "",
+    origin: selectedProduct.origin || "",
+    durability: selectedProduct.durability || "",
   };
 
   const existing = cart.find(

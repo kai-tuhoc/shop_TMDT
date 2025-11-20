@@ -415,6 +415,22 @@
             id="color"
             placeholder="Màu (cách nhau bằng dấu , nếu nhiều)"
           /><br /><br />
+          <textarea
+            id="description"
+            placeholder="Mô tả sản phẩm (không bắt buộc)"
+            rows="3"
+          ></textarea
+          ><br /><br />
+          <input
+            type="text"
+            id="origin"
+            placeholder="Xuất xứ (ví dụ: Việt Nam, Trung Quốc)"
+          /><br /><br />
+          <input
+            type="text"
+            id="durability"
+            placeholder="Độ bền (ví dụ: 2-3 năm)"
+          /><br /><br />
           <button type="submit" class="btn_add">Thêm</button>
         </form>
       </div>
@@ -425,19 +441,28 @@
     <div class="product-detail-modal" id="productDetailModal">
       <div class="modal-content">
         <span class="close-detail">&times;</span>
-        <img id="detailImage" src="" alt="" />
-        <h2 id="detailName"></h2>
-        <p id="detailPrice"></p>
-        <p id="detailMaterial"></p>
-        <p id="detailColor"></p>
+        <div class="detail-wrapper">
+          <div class="detail-image">
+            <img id="detailImage" src="" alt="" />
+          </div>
+          <div class="detail-info">
+            <h2 id="detailName"></h2>
+            <p id="detailPrice" class="detail-price"></p>
+            <p id="detailMaterial"></p>
+            <p id="detailColor"></p>
+            <p id="detailDescription" class="detail-description"></p>
+            <p id="detailOrigin"></p>
+            <p id="detailDurability"></p>
 
-        <div class="size-options">
-          <p>Chọn size:</p>
-          <div id="sizeButtons">
-            <!-- Các nút size sẽ được tạo bằng JS -->
+            <div class="size-options">
+              <p>Chọn size:</p>
+              <div id="sizeButtons">
+                <!-- Các nút size sẽ được tạo bằng JS -->
+              </div>
+            </div>
+            <button id="addToCartBtn" class="btn_tb">Thêm vào giỏ hàng</button>
           </div>
         </div>
-        <button id="addToCartBtn" class="btn_tb">Thêm vào giỏ hàng</button>
       </div>
     </div>
 
