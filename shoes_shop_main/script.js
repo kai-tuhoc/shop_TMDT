@@ -51,9 +51,13 @@ function renderCart() {
 
   cart.forEach((item, index) => {
     // Đảm bảo price là số
-    const itemPrice = typeof item.price === 'number' ? item.price : parseInt(item.price) || 0;
-    const itemQuantity = typeof item.quantity === 'number' ? item.quantity : parseInt(item.quantity) || 1;
-    
+    const itemPrice =
+      typeof item.price === "number" ? item.price : parseInt(item.price) || 0;
+    const itemQuantity =
+      typeof item.quantity === "number"
+        ? item.quantity
+        : parseInt(item.quantity) || 1;
+
     total += itemPrice * itemQuantity;
 
     const div = document.createElement("div");
@@ -104,7 +108,7 @@ function updateQuantity(index, value) {
   } else {
     cart[index].quantity = newValue;
   }
-  
+
   if (newValue >= 100) {
     let ktra = confirm(
       "Bạn mua nhiều số lượng quá , liên hệ với shop để tư vấn nha <3 "
