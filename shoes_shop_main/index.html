@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Miki shop</title>
+    <!-- link đồng bộ  -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css"
+      integrity="sha512-NhSC1YmyruXifcj/KFRWoC561YpHpc5Jtzgvbuzx5VozKpWvQ+4nXhPdFgmx8xqexRcpAglTj9sIBWINXa8x5w=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+
+    <!-- Bootstrap CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+
+    <!-- Bootstrap JS (gồm cả Popper) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!--  link icon -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
+      integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <!-- link file  -->
+    <link rel="stylesheet" href="asset/css/style.css" />
+    <link rel="stylesheet" href="asset/css/base.css" />
+  </head>
+  <body>
+    <div class="hello">
+      <p class="hello_text">Chào mừng bạn đến với MIKI shop !</p>
+    </div>
+    <header>
+      <div class="container-fluid display-center">
+        <div class="header-function">
+          <ul class="header-list">
+            <li class="header-list_item">
+              <a href="#" class="header-link">Trang chủ </a>
+            </li>
+            <li class="header-list_item">
+              <a href="#content-section1" class="header-link">Sản phẩm</a>
+            </li>
+            <li class="header-list_item">
+              <a href="" class="header-link"> Liên hệ </a>
+            </li>
+          </ul>
+
+          <ul class="header-button-list">
+            <button class="header__btn-admin">Admin</button>
+            <div class="header-btn-list_wrap">
+              <li class="header-btn btn-logIN">
+                <a
+                  href="#"
+                  class="header-btn_link"
+                  data-bs-toggle="modal"
+                  data-bs-target="#register"
+                >
+                  Đăng kí
+                </a>
+              </li>
+              <li class="header-btn btn-logIN">
+                <a
+                  href="#"
+                  class="header-btn_link"
+                  data-bs-toggle="modal"
+                  data-bs-target="#exampleModal"
+                >
+                  Đăng nhập
+                </a>
+              </li>
+            </div>
+          </ul>
+        </div>
+        <div class="header_wrap">
+          <div class="header-logo">
+            <img src="/asset/img/logo_trang.png" alt="" />
+            <span class="logo-name"> MIKI </span>
+          </div>
+          <div class="header-search">
+            <div class="header-input">
+              <input
+                class="header-search_input"
+                type="text"
+                placeholder="Tìm kiếm "
+              />
+              <i class="fa-solid fa-magnifying-glass header-icon-input"></i>
+            </div>
+          </div>
+
+          <div class="header-buy">
+            <i class="fa-solid fa-cart-shopping buy-icon"></i>
+          </div>
+          <div class="header-actions">
+            <button id="viewSizeBtn" class="btn-view-size">Xem size</button>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <div class="container-fluid main_wrap">
+        <div class="info">
+          <div class="info-wrap">
+            <div class="row">
+              <div class="col-lg-6">
+                <div class="info-left">
+                  <!-- <p class="info-left_value"> -->
+                  <h1 class="info-title">
+                    MIKI – Thế giới giày dành cho người yêu chuyển động!
+                  </h1>
+                  <span class="info-value">
+                    Tại MIKI, chúng tôi tin rằng mỗi bước chân đều kể một câu
+                    chuyện. Từ đôi giày đầu tiên bạn chọn cho buổi tập — tất cả
+                    đều bắt đầu từ cảm hứng “chuyển động không giới hạn”. MIKI
+                    mang đến cho bạn những thiết kế thể thao trẻ trung, năng
+                    động, cùng chất liệu êm ái và kiểu dáng thời thượng. Dù bạn
+                    là người yêu chạy bộ, thích dạo phố hay chỉ đơn giản muốn
+                    thể hiện phong cách riêng, MIKI luôn có một đôi giày dành
+                    riêng cho bạn.</span
+                  >
+                  <span class="info-value_footer">MIKI – Đi để khác biệt.</span>
+                  <!-- </p> -->
+                  <div class="info-rating">
+                    <i class="fa-solid fa-star info-rating_item"></i>
+                    <i class="fa-solid fa-star info-rating_item"></i>
+                    <i class="fa-solid fa-star info-rating_item"></i>
+                    <i class="fa-solid fa-star info-rating_item"></i>
+                    <i class="fa-solid fa-star info-rating_item"></i>
+                  </div>
+                </div>
+              </div>
+              <div class="col-lg-6">
+                <div class="info-introduce">
+                  <img src="asset/img/banner1.png" alt="" />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="product">
+          <div class="row">
+            <div class="col-lg-2">
+              <div class="product-category_wrap sticky">
+                <h1>Category</h1>
+                <div class="category">
+                  <p id="content-link1" class="active">
+                    <a href="#content-section1">Giày Nam</a>
+                  </p>
+                  <p id="content-link2">
+                    <a href="#content-section2">Giày Nữ </a>
+                  </p>
+                  <p id="content-link3">
+                    <a href="#content-section3">Giày Unisex</a>
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-10">
+              <div class="product-list">
+                <section id="content-section1">
+                  <div class="content-title">
+                    <h1>Giày Nam</h1>
+                    <!-- <i title="Thêm sản phẩm!" tit class="content-title__icon fa-solid fa-plus"></i> -->
+                    <button class="btn-add openModal" data-category="nam">
+                      + Thêm sản phẩm
+                    </button>
+                  </div>
+                  <div class="row gx-2 gy-2" id="productList">
+                    <!-- <div class="col-lg-3">
+                                        <div class="product-card">
+                                            <img src="/asset/img/giaynam1.jpg" alt="Giày thể thao MIKI">
+                                            <h3 class="product-name">java</h3>
+                                            <p class="price">175.000đ <span class="old-price">240.000đ</span></p>
+                                            <button class="button">Thêm vào giỏ</button>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-3">
+                                        <div class="product-card">
+                                            <img src="/asset/img/giaynam2.jpg" alt="Giày thể thao MIKI">
+                                            <h3 class="product-name">js</h3>
+                                            <p class="price">169.000đ <span class="old-price">235.000đ</span></p>
+                                            <button class="button">Thêm vào giỏ</button>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-3">
+                                        <div class="product-card">
+                                            <img src="/asset/img/giaynam3.jpg" alt="Giày thể thao MIKI">
+                                            <h3 class="product-name">meo meo</h3>
+                                            <p class="price">189.000đ <span class="old-price">300.000đ</span></p>
+                                            <button class="button">Thêm vào giỏ</button>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-3">
+                                        <div class="product-card">
+                                            <img src="/asset/img/giaynam4.png" alt="Giày thể thao MIKI">
+                                            <h3 class="product-name"> spring boot</h3>
+                                            <p class="price"> 200.000đ <span class="old-price">320.000đ</span></p>
+                                            <button class="button">Thêm vào giỏ</button>
+                                        </div>
+                                    </div> -->
+                  </div>
+                  <!-- <img src="http://127.0.0.1:5500/asset/img/giaynu1.jpg" alt=""> -->
+                </section>
+                <section id="content-section2">
+                  <div class="content-title">
+                    <h1>Giày Nữ</h1>
+                    <!-- <i title="Thêm sản phẩm!" tit class="content-title__icon fa-solid fa-plus"></i> -->
+                    <button class="btn-add openModal" data-category="nu">
+                      + Thêm sản phẩm
+                    </button>
+                  </div>
+                  <div class="row gx-2 gy-2" id="productListNu">
+                    <!-- <div class="col-lg-3">
+                                        <div class="product-card">
+                                            <img src="/asset/img/giaynu1.jpg" alt="Giày thể thao MIKI">
+                                            <h3 class="product-name">giày </h3>
+                                            <p class="price">210.000đ <span class="old-price">340.000đ</span></p>
+                                            <button class="button">Thêm vào giỏ</button>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-3">
+                                        <div class="product-card">
+                                            <img src="/asset/img/giaynu2.jpg" alt="Giày thể thao MIKI">
+                                            <h3 class="product-name">áo</h3>
+                                            <p class="price">250.000đ <span class="old-price">300.000đ</span></p>
+                                            <button class="button">Thêm vào giỏ</button>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-3">
+                                        <div class="product-card">
+                                            <img src="/asset/img/giaynu3.jpg" alt="Giày thể thao MIKI">
+                                            <h3 class="product-name">quần</h3>
+                                            <p class="price"> 190.000đ <span class="old-price"> 280.000đ</span></p>
+                                            <button class="button">Thêm vào giỏ</button>
+                                        </div>
+                                    </div> -->
+                  </div>
+                </section>
+                <section id="content-section3">
+                  <div class="content-title">
+                    <h1>Giày Unisex</h1>
+                    <!-- <i title="Thêm sản phẩm!" tit class="content-title__icon fa-solid fa-plus"></i> -->
+                    <button class="btn-add openModal" data-category="unisex">
+                      + Thêm sản phẩm
+                    </button>
+                  </div>
+                  <div class="row gx-2 gy-2" id="productListUnisex">
+                    <!-- <div class="col-lg-3">
+                                        <div class="product-card">
+                                            <img src="/asset/img/giayunisex1.jpg" alt="Giày thể thao MIKI">
+                                            <h3 class="product-name">giày xịn</h3>
+                                            <p class="price"> 190.000đ <span class="old-price">290.000đ</span></p>
+                                            <button class="button">Thêm vào giỏ</button>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-3">
+                                        <div class="product-card">
+                                            <img src="/asset/img/giayunisex2.jpg" alt="Giày thể thao MIKI">
+                                            <h3 class="product-name">Giày MIKI Air Run</h3>
+                                            <p class="price">175.000đ <span class="old-price">280.000đ</span></p>
+                                            <button class="button">Thêm vào giỏ</button>
+                                        </div>
+                                    </div> -->
+                  </div>
+                </section>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- shopping cart -->
+      <div class="cart-overlay" id="cart">
+        <div class="cart">
+          <div class="cart-header">
+            <h3>Giỏ hàng của bạn</h3>
+            <span class="close-cart">&times;</span>
+          </div>
+          <div class="cart-items"></div>
+          <div class="cart-footer">
+            <h4>Tổng: <span id="cart-total">0đ</span></h4>
+            <button class="checkout-btn">Thanh toán</button>
+          </div>
+        </div>
+      </div>
+      <!-- hiên thông báo khi ấn giỏ hàng  -->
+      <div class="notify">
+        <div class="notify__content">
+          <i class="notify__icon fa-solid fa-check"></i>
+          <div class="notify__text">Thêm sản phẩm thành công !</div>
+        </div>
+      </div>
+    </main>
+
+    <footer>
+      <div class="footer">
+        <div class="ft-1">
+          <div style="display: flex">
+            <div>
+              <img
+                style="width: 150px; height: 150px; padding: 0 10px"
+                src="/asset/img/logo_trang.png"
+                alt=""
+              />
+            </div>
+            <div>
+              <h5>MIKI - Thế giới giày dành cho người yêu chuyển động!</h5>
+              MIKI tự hào mang đến cho bạn những đôi giày chính hãng, thời trang
+              và chất lượng nhất. Chúng tôi cam kết mang lại trải nghiệm mua sắm
+              thoải mái, giao hàng nhanh chóng và dịch vụ tận tâm. Hãy cùng MIKI
+              bước đi tự tin trên mọi hành trình!
+            </div>
+          </div>
+        </div>
+        <div class="ft-2">
+          <h5>Về chúng tôi</h5>
+          <p>
+            <a href="#">Giới thiệu</a> <br />
+            <a href="#">Điều khoản sử dụng</a> <br />
+            <a href="#">Chính sách bảo mật</a> <br />
+            <a href="#">Liên hệ</a>
+          </p>
+        </div>
+        <div class="ft-3">
+          <h5>Khách hàng</h5>
+          <p>
+            <a href="#">Chính sách mua hàng</a> <br />
+            <a href="#">Chính sách đổi trả</a> <br />
+            <a href="#">Chính sách bảo hành</a> <br />
+          </p>
+        </div>
+      </div>
+    </footer>
+
+    <!-- modal  -->
+    <!-- login -->
+    <div class="modal" id="exampleModal" tabindex="-1">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="login-wrap">
+            <h2 class="login-title">Đăng nhập</h2>
+            <form action="" class="login-form">
+              <input
+                class="login-input"
+                type="text"
+                placeholder="Email/Số điện thoại!"
+              />
+              <input class="login-input" type="text" placeholder="Mật khẩu!" />
+              <button class="login-input login-btn">Đăng nhập</button>
+              <p class="login-forgot_password">Quên mật khẩu</p>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- register -->
+    <div class="modal" id="register" tabindex="-1">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="login-wrap">
+            <h2 class="login-title">Đăng kí</h2>
+            <form action="" class="login-form">
+              <input
+                class="login-input"
+                type="text"
+                placeholder="Email/Số điện thoại!"
+              />
+              <input class="login-input" type="text" placeholder="Mật khẩu!" />
+              <button class="login-input login-btn">Đăng kí</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- modal thêm sản phẩm  -->
+    <div class="modal modal__add" id="modal">
+      <div class="modal-content modal-content_add">
+        <span class="close" id="closeModal">&times;</span>
+        <h3>Thêm sản phẩm mới</h3>
+        <form id="addForm" class="addform">
+          <input
+            type="text"
+            id="name"
+            placeholder="Tên sản phẩm"
+            required
+          /><br /><br />
+          <input
+            type="number"
+            id="price"
+            placeholder="Giá"
+            required
+          /><br /><br />
+          <input
+            type="text"
+            id="image"
+            placeholder="Link ảnh"
+            required
+          /><br /><br />
+          <input
+            type="text"
+            id="material"
+            placeholder="Chất liệu (ví dụ: da, vải)"
+          /><br /><br />
+          <input
+            type="text"
+            id="color"
+            placeholder="Màu (cách nhau bằng dấu , nếu nhiều)"
+          /><br /><br />
+          <button type="submit" class="btn_add">Thêm</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- thông báo khi nhập quá nhiều sản phầm  -->
+    <!-- Modal chi tiết sản phẩm -->
+    <div class="product-detail-modal" id="productDetailModal">
+      <div class="modal-content">
+        <span class="close-detail">&times;</span>
+        <img id="detailImage" src="" alt="" />
+        <h2 id="detailName"></h2>
+        <p id="detailPrice"></p>
+        <p id="detailMaterial"></p>
+        <p id="detailColor"></p>
+
+        <div class="size-options">
+          <p>Chọn size:</p>
+          <div id="sizeButtons">
+            <!-- Các nút size sẽ được tạo bằng JS -->
+          </div>
+        </div>
+        <button id="addToCartBtn" class="btn_tb">Thêm vào giỏ hàng</button>
+      </div>
+    </div>
+
+    <!-- khung thông báo khi người dùng nhạp quá nhiều  -->
+    <!-- <div class="tb">
+    <h2 class="tb-title"> Thông báo </h2>
+    <p class="tb__content"> </p>
+</div> -->
+    <!-- Size overlay (global, not inside modal) -->
+    <div id="sizeOverlay" class="size-overlay" aria-hidden="true">
+      <div class="size-overlay-content">
+        <button class="size-overlay-close" aria-label="Đóng">&times;</button>
+        <img src="asset/img/sizegiay.png" alt="Bảng size giày" />
+      </div>
+    </div>
+    <script src="script.js"></script>
+  </body>
+</html>

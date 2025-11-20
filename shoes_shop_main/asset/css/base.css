@@ -1,0 +1,42 @@
+.active{
+    font-size: 20px;
+    font-weight: 600;
+}
+.active a{
+    color: red;                             
+}
+
+.fade{
+    display: none;
+}
+
+@keyframes high {
+    from{
+        opacity: 0;
+    }
+    to{
+        opacity: 1;
+    }
+}
+
+.pos-re{
+    position: relative;
+}
+
+@keyframes runLeft {
+    0%{
+        opacity: 0;
+        transform: translateX(120%);
+    }
+    100%{
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes high1 {
+    to{
+        opacity: 0;
+        transform: translateX(120%);
+    }
+}

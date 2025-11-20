@@ -1,0 +1,520 @@
+const category = document.querySelectorAll(".category p");
+// console.log(category)
+const section = document.querySelectorAll("section");
+
+window.addEventListener("scroll", () => {
+  let current = "";
+  section.forEach((section) => {
+    const sectionTop = section.offsetTop; // vị trí phần tử so với đầu trang
+    if (pageYOffset >= sectionTop - 250) {
+      // vij trí đang kéo đến
+      current = section.getAttribute("id");
+    }
+  });
+
+  category.forEach((p) => {
+    p.classList.remove("active");
+    if (p.id === "content-link" + current.slice(-1)) {
+      p.classList.add("active");
+    }
+  });
+});
+
+/////////////////////////
+// === CART FUNCTIONALITY === //
+const cartIcon = document.querySelector(".buy-icon");
+const cartOverlay = document.querySelector("#cart");
+const closeCart = document.querySelector(".close-cart");
+const cartItemsContainer = document.querySelector(".cart-items");
+const cartTotal = document.querySelector("#cart-total");
+
+let cart = [];
+
+// Mở / đóng giỏ hàng
+cartIcon.addEventListener("click", () => {
+  cartOverlay.style.display = "flex";
+});
+
+closeCart.addEventListener("click", () => {
+  cartOverlay.style.display = "none";
+});
+
+// Hiển thị giỏ hàng
+function renderCart() {
+  cartItemsContainer.innerHTML = "";
+  let total = 0;
+
+  cart.forEach((item, index) => {
+    total += item.price * item.quantity;
+
+    const div = document.createElement("div");
+    div.classList.add("cart-item");
+    div.innerHTML = `
+            <img src="${item.img}" alt="">
+            <div class="item-info">
+                <h5>${item.name}</h5>
+                <p>${item.price.toLocaleString()}đ</p>
+            </div>
+            <div class="item-quantity">
+                <button onclick="changeQuantity(${index}, -1)">-</button>
+                <input 
+                    class ="input_quantity"
+                    type="number" 
+                    min="1" 
+                    value="${item.quantity}" 
+                    onchange="updateQuantity(${index}, this.value)" 
+                    style="width:50px;text-align:center;"
+                >
+                <button onclick="changeQuantity(${index}, 1)">+</button>
+            </div>
+
+            <i class="fa-solid fa-trash" style="cursor:pointer;color:red;" onclick="removeItem(${index})"></i>
+        `;
+    cartItemsContainer.appendChild(div);
+  });
+
+  cartTotal.innerText = total.toLocaleString() + "đ";
+}
+
+// Thay đổi số lượng
+function changeQuantity(index, change) {
+  cart[index].quantity += change;
+  if (cart[index].quantity <= 0) cart.splice(index, 1);
+  renderCart();
+}
+
+////////////
+function updateQuantity(index, value) {
+  const newValue = parseInt(value);
+  if (isNaN(newValue) || newValue <= 0) {
+    // Nếu nhập số không hợp lệ thì xóa sản phẩm
+    cart.splice(index, 1);
+  } else {
+    cart[index].quantity = newValue;
+  }
+  if (newValue >= 100) {
+    let ktra = confirm(
+      "Bạn mua nhiều số lượng quá , liên hệ với shop để tư vấn nha <3 "
+    );
+    if (ktra) {
+      alert(
+        "bạn để lại số điện thoại để mình lấy thông tin chốt đơn cho bạn nhá !"
+      );
+      prompt("mời bạn nhập số điện thoại ");
+    } else {
+      alert("rất tiếc , bạn không thể mua hàng của chúng tôi !");
+    }
+  }
+  renderCart();
+}
+const checkout_btn = document.querySelector(".checkout-btn");
+
+let input = () => {
+  const input_quantity = document.querySelector(".input_quantity");
+  return input_quantity ? input_quantity.value : 0;
+};
+// console.log(checkout_btn);
+checkout_btn.addEventListener("click", () => {
+  if (input() >= 100) {
+    alert(" nhiều quá !");
+  }
+});
+// Xóa sản phẩm
+function removeItem(index) {
+  cart.splice(index, 1);
+  renderCart();
+}
+
+// tìm kiếm
+const search = document.querySelector(".header-search_input");
+// const productName = document.querySelectorAll(".product-name");
+const product_list = document.querySelector(".product-list");
+// const search = document.querySelector(".header-search_input");
+
+function performSearch() {
+  // cuộn tới khu vực sản phẩm
+  const offset =
+    product_list.getBoundingClientRect().top + window.pageYOffset - 100;
+  window.scrollTo({ top: offset, behavior: "smooth" });
+
+  const input_value = search.value.toLowerCase().trim();
+  const allProducts = document.querySelectorAll(".product-card");
+
+  // Nếu input rỗng thì hiện tất cả
+  if (!input_value) {
+    allProducts.forEach((card) => card.parentElement.classList.remove("fade"));
+    return;
+  }
+
+  // kiểm tra: nếu tên sản phẩm chứa chuỗi tìm kiếm (substring) -> hiện
+  let anyShown = false;
+  allProducts.forEach((card) => {
+    const nameEl = card.querySelector(".product-name");
+    const nameSP = nameEl.textContent.toLowerCase().trim();
+
+    const matched = nameSP.includes(input_value);
+    if (matched) {
+      card.parentElement.classList.remove("fade");
+      anyShown = true;
+    } else {
+      card.parentElement.classList.add("fade");
+    }
+  });
+
+  // Nếu không có kết quả nào, hiển thị thông báo nhỏ (dùng .notify)
+  if (!anyShown) {
+    const toast = document.querySelector(".notify");
+    if (toast) {
+      const textEl = toast.querySelector(".notify__text");
+      if (textEl) textEl.textContent = "Sản phẩm không tồn tại";
+      // đảm bảo toast hiển thị (bỏ transform nếu có)
+      toast.style.display = "flex";
+      toast.style.transform = "translateX(0)";
+      clearTimeout(toast._hideTimeout);
+      toast._hideTimeout = setTimeout(() => {
+        // ẩn và khôi phục nội dung mặc định
+        toast.style.transform = "translateX(120%)";
+        setTimeout(() => {
+          toast.style.display = "none";
+          if (textEl) textEl.textContent = "Thêm sản phẩm thành công !";
+        }, 300); // allow transform to finish
+      }, 2000);
+    } else {
+      alert("Sản phẩm không tồn tại");
+    }
+  }
+}
+
+// lắng nghe gõ phím (keyup) và Enter
+search.addEventListener("keyup", (e) => {
+  // nếu nhấn Enter hoặc gõ ký tự mới thì tìm
+  if (e.key === "Enter") {
+    performSearch();
+  } else {
+    performSearch();
+  }
+});
+
+// click vào icon tìm kiếm cũng gọi tìm
+const searchIcon = document.querySelector(".header-icon-input");
+if (searchIcon) searchIcon.addEventListener("click", performSearch);
+// THÊM SẢN PHẨM KHI ẤN
+
+// --- MODAL ADD PRODUCT  ---
+const modal = document.getElementById("modal");
+console.log(modal);
+const closeModal = document.getElementById("closeModal");
+const openModalButtons = document.querySelectorAll(".openModal");
+let currentCategory = null;
+
+openModalButtons.forEach((btn) => {
+  btn.addEventListener("click", () => {
+    currentCategory = btn.getAttribute("data-category");
+    modal.style.display = "flex";
+  });
+});
+
+// Đóng modal
+closeModal.addEventListener("click", () => {
+  modal.style.display = "none";
+});
+
+// Khi click ra ngoài modal thì ẩn đi
+window.addEventListener("click", (e) => {
+  if (e.target === modal) {
+    modal.style.display = "none";
+  }
+});
+
+// THÊM SẢN PHẨM  /////////////////////
+let productsData = JSON.parse(localStorage.getItem("productsData")) || {
+  nam: [],
+  nu: [],
+  unisex: [],
+};
+
+const form = document.getElementById("addForm");
+const nameInput = document.getElementById("name");
+const priceInput = document.getElementById("price");
+const imageInput = document.getElementById("image");
+const materialInput = document.getElementById("material");
+const colorInput = document.getElementById("color");
+const productList = document.getElementById("productList");
+
+// hàm hiển thị  sản phẩm
+// if()
+function renderCategoryProducts(category, containerId) {
+  const productList = document.getElementById(containerId);
+  productList.innerHTML = "";
+  productsData[category].forEach((p, index) => {
+    const item = document.createElement("div");
+    item.className = "col-lg-3 pos-re";
+    const materialText = p.material ? p.material : "";
+    const colorText = p.color ? p.color : "";
+    item.innerHTML = `
+        <div class="product-card" data-material="${materialText}" data-color="${colorText}">
+            <div><button class="delete" data-category="${category}" data-index="${index}">×</button></div>
+            <img src="${p.image}" alt="${p.name}">
+            <div class="product-overlay">
+                <p><strong>Chất liệu:</strong> ${materialText || "—"}</p>
+                <p><strong>Màu:</strong> ${colorText || "—"}</p>
+            </div>
+            <h3 class="product-name">${p.name}</h3>
+            <p class="price">${p.price.toLocaleString()}đ</p>
+            <button class="button">Thêm vào giỏ</button>
+        </div>
+        `;
+    productList.appendChild(item);
+  });
+}
+
+// NOTE: add-to-cart via product buttons is handled by the detail modal.
+// Clicking the product card or its "Thêm vào giỏ" button will open the
+// product detail modal so user can choose size and confirm.
+// hàm thêm sản phẩm
+form.addEventListener("submit", (e) => {
+  e.preventDefault();
+
+  const newProduct = {
+    name: nameInput.value,
+    price: Number(priceInput.value),
+    image: imageInput.value,
+    material: materialInput ? materialInput.value : "",
+    color: colorInput ? colorInput.value : "",
+  };
+
+  if (currentCategory) {
+    productsData[currentCategory].push(newProduct);
+    localStorage.setItem("productsData", JSON.stringify(productsData));
+  }
+
+  form.reset();
+  renderAll();
+  modal.style.display = "none"; //  đóng modal sau khi th
+});
+
+// hàm xóa sản phẩm
+function deleteProduct(category, index, event) {
+  event.stopPropagation();
+  if (confirm("Bạn có chắc muốn xóa sản phẩm này?")) {
+    productsData[category].splice(index, 1);
+    localStorage.setItem("productsData", JSON.stringify(productsData));
+    renderAll();
+  }
+}
+
+function renderAll() {
+  renderCategoryProducts("nam", "productList"); // Giày Nam
+  renderCategoryProducts("nu", "productListNu"); // Giày Nữ
+  renderCategoryProducts("unisex", "productListUnisex"); // Giày Unisex
+  attachDeleteEvents();
+}
+renderAll();
+
+function attachDeleteEvents() {
+  const deleteButtons = document.querySelectorAll(".delete");
+  deleteButtons.forEach((btn) => {
+    btn.addEventListener("click", (e) => {
+      e.stopPropagation(); // 🔥 chặn click lan lên document (modal sẽ KHÔNG mở)
+      const category = btn.dataset.category;
+      const index = btn.dataset.index;
+
+      if (confirm("Bạn có chắc muốn xóa sản phẩm này?")) {
+        productsData[category].splice(index, 1);
+        localStorage.setItem("productsData", JSON.stringify(productsData));
+        renderAll();
+      }
+    });
+  });
+}
+
+// admin
+const admin = document.querySelector(".header__btn-admin");
+const product_card = document.querySelectorAll(".product-card");
+const btn_add = document.querySelectorAll(".btn-add");
+let btn_test = localStorage.getItem("btn_test") === "true";
+
+admin.addEventListener("click", () => {
+  if (btn_test) {
+    admin.textContent = "Khách";
+    product_card.forEach((child) => {
+      const delete_btn = child.querySelector(".delete");
+      if (delete_btn) delete_btn.style.display = "none";
+    });
+    btn_add.forEach((child) => {
+      child.style.display = "none";
+    });
+  } else {
+    admin.textContent = "Admin";
+    product_card.forEach((child) => {
+      const delete_btn = child.querySelector(".delete");
+      if (delete_btn) delete_btn.style.display = "block";
+    });
+    btn_add.forEach((child) => {
+      child.style.display = "block";
+    });
+  }
+  btn_test = !btn_test;
+  localStorage.setItem("btn_test", btn_test);
+});
+
+//  phần size sản phẩm
+// -------------------- PRODUCT DETAIL MODAL --------------------
+const detailModal = document.getElementById("productDetailModal");
+const detailImage = document.getElementById("detailImage");
+const detailName = document.getElementById("detailName");
+const detailPrice = document.getElementById("detailPrice");
+const sizeButtonsContainer = document.getElementById("sizeButtons");
+const addToCartBtn = document.getElementById("addToCartBtn");
+const closeDetail = document.querySelector(".close-detail");
+
+let selectedProduct = null;
+let selectedSize = null;
+
+// Hiển thị modal khi click vào sản phẩm (bỏ qua khi click nút 'Thêm vào giỏ' hoặc 'X')
+document.addEventListener("click", function (e) {
+  const clickedAddBtn = e.target.closest(".button");
+  const clickedDelete = e.target.closest(".delete");
+  const card = e.target.closest(".product-card");
+
+  if (card && !clickedDelete) {
+    const img = card.querySelector("img").src;
+    const name = card.querySelector("h3").textContent;
+    const price = card.querySelector("p").textContent;
+    const material = card.dataset.material || "";
+    const color = card.dataset.color || "";
+
+    // normalize price (numeric) for cart operations
+    const priceNum = parseInt(price.replace(/[^\d]/g, "")) || 0;
+
+    selectedProduct = { img, name, price, priceNum, material, color };
+
+    detailImage.src = img;
+    detailName.textContent = name;
+    detailPrice.textContent = price;
+    // hiển thị material & color
+    const detailMaterialEl = document.getElementById("detailMaterial");
+    const detailColorEl = document.getElementById("detailColor");
+    if (detailMaterialEl)
+      detailMaterialEl.textContent = material ? `Chất liệu: ${material}` : "";
+    if (detailColorEl) detailColorEl.textContent = color ? `Màu: ${color}` : "";
+
+    selectedSize = null; // reset
+
+    // Tạo các nút size
+    const sizes = [26, 27, 28, 29, 30, 31, 32, 33, 34];
+    sizeButtonsContainer.innerHTML = "";
+    sizes.forEach((size) => {
+      const btn = document.createElement("button");
+      btn.textContent = size;
+      btn.addEventListener("click", () => {
+        document
+          .querySelectorAll("#sizeButtons button")
+          .forEach((b) => b.classList.remove("active"));
+        btn.classList.add("active");
+        selectedSize = size;
+      });
+      sizeButtonsContainer.appendChild(btn);
+    });
+
+    detailModal.style.display = "flex";
+  }
+});
+
+// Đóng modal chi tiết
+closeDetail.addEventListener("click", () => {
+  detailModal.style.display = "none";
+});
+
+window.addEventListener("click", (e) => {
+  if (e.target === detailModal) {
+    detailModal.style.display = "none";
+  }
+});
+
+// Khi ấn "Thêm vào giỏ hàng"
+addToCartBtn.addEventListener("click", () => {
+  if (!selectedSize) {
+    alert("Vui lòng chọn size giày!");
+    return;
+  }
+
+  // Thêm vào danh sách giỏ hàng dùng biến `cart` và cập nhật hiển thị
+  const item = {
+    name: selectedProduct.name,
+    price: selectedProduct.priceNum || 0,
+    img: selectedProduct.img,
+    quantity: 1,
+    size: selectedSize,
+    material: selectedProduct.material || "",
+    color: selectedProduct.color || "",
+  };
+
+  const existing = cart.find(
+    (c) => c.name === item.name && c.size === item.size
+  );
+  if (existing) {
+    existing.quantity += 1;
+  } else {
+    cart.push(item);
+  }
+
+  renderCart();
+  // cũng lưu tạm vào localStorage để duy trì nếu reload
+  localStorage.setItem("cart", JSON.stringify(cart));
+
+  detailModal.style.display = "none";
+});
+
+// hiện ra thông báo đã thêm sản phẩm thành công
+const button_tb = document.querySelectorAll(".btn_tb");
+const notify = document.querySelector(".notify");
+button_tb.forEach((child) => {
+  child.addEventListener("click", () => {
+    notify.style.display = "flex";
+    // notify.offsetHeight;
+    notify.style.animation =
+      " runLeft 0.5s ease forwards , high1 2s ease 2.5s forwards";
+    setTimeout(() => {
+      notify.style.display = "none";
+      notify.style.animation = "";
+    }, 2000);
+  });
+});
+
+// --- View size overlay ---
+const viewSizeBtn = document.getElementById("viewSizeBtn");
+const sizeOverlay = document.getElementById("sizeOverlay");
+const sizeOverlayClose = document.querySelector(".size-overlay-close");
+
+if (viewSizeBtn && sizeOverlay) {
+  viewSizeBtn.addEventListener("click", () => {
+    sizeOverlay.style.display = "flex";
+  });
+}
+
+if (sizeOverlayClose) {
+  sizeOverlayClose.addEventListener("click", () => {
+    sizeOverlay.style.display = "none";
+  });
+}
+
+// click outside content to close
+if (sizeOverlay) {
+  sizeOverlay.addEventListener("click", (e) => {
+    if (e.target === sizeOverlay) sizeOverlay.style.display = "none";
+  });
+}
+
+// close overlay with Escape key for convenience
+window.addEventListener("keydown", (e) => {
+  if (e.key === "Escape") {
+    if (sizeOverlay && sizeOverlay.style.display === "flex") {
+      sizeOverlay.style.display = "none";
+    }
+    // also close detail modal if open
+    if (detailModal && detailModal.style.display === "flex") {
+      detailModal.style.display = "none";
+    }
+  }
+});
