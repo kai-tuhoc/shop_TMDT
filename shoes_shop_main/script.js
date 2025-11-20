@@ -50,7 +50,11 @@ function renderCart() {
   let total = 0;
 
   cart.forEach((item, index) => {
-    total += item.price * item.quantity;
+    // Đảm bảo price là số
+    const itemPrice = typeof item.price === 'number' ? item.price : parseInt(item.price) || 0;
+    const itemQuantity = typeof item.quantity === 'number' ? item.quantity : parseInt(item.quantity) || 1;
+    
+    total += itemPrice * itemQuantity;
 
     const div = document.createElement("div");
     div.classList.add("cart-item");
@@ -58,9 +62,9 @@ function renderCart() {
             <img src="${item.img}" alt="">
             <div class="item-info">
                 <h5>${item.name}</h5>
-                <p><strong>Giá:</strong> ${item.price.toLocaleString()}đ</p>
+                <p><strong>Giá:</strong> ${itemPrice.toLocaleString()}đ</p>
                 <p><strong>Size:</strong> ${item.size || "—"}</p>
-                <p><strong>Số lượng:</strong> ${item.quantity}</p>
+                <p><strong>Số lượng:</strong> ${itemQuantity}</p>
             </div>
             <div class="item-quantity">
                 <button onclick="changeQuantity(${index}, -1)">-</button>
@@ -68,7 +72,7 @@ function renderCart() {
                     class ="input_quantity"
                     type="number" 
                     min="1" 
-                    value="${item.quantity}" 
+                    value="${itemQuantity}" 
                     onchange="updateQuantity(${index}, this.value)" 
                     style="width:50px;text-align:center;"
                 >
@@ -100,17 +104,20 @@ function updateQuantity(index, value) {
   } else {
     cart[index].quantity = newValue;
   }
+  
   if (newValue >= 100) {
     let ktra = confirm(
       "Bạn mua nhiều số lượng quá , liên hệ với shop để tư vấn nha <3 "
     );
-    if (ktra) {
+    if (!ktra) {
+      // Nếu không đồng ý, xóa sản phẩm
+      cart.splice(index, 1);
+      alert("rất tiếc , bạn không thể mua hàng của chúng tôi !");
+    } else {
       alert(
         "bạn để lại số điện thoại để mình lấy thông tin chốt đơn cho bạn nhá !"
       );
       prompt("mời bạn nhập số điện thoại ");
-    } else {
-      alert("rất tiếc , bạn không thể mua hàng của chúng tôi !");
     }
   }
   renderCart();
@@ -447,7 +454,8 @@ document.addEventListener("click", function (e) {
   if (card && !clickedDelete) {
     const img = card.querySelector("img").src;
     const name = card.querySelector("h3").textContent;
-    const price = card.querySelector("p").textContent;
+    const priceEl = card.querySelector(".price");
+    const price = priceEl ? priceEl.textContent : "0đ";
     const material = card.dataset.material || "";
     const color = card.dataset.color || "";
     const description = card.dataset.description || "";
