@@ -27,12 +27,46 @@ const cartOverlay = document.querySelector("#cart");
 const closeCart = document.querySelector(".close-cart");
 const cartItemsContainer = document.querySelector(".cart-items");
 const cartTotal = document.querySelector("#cart-total");
+const checkoutBtn = document.querySelector(".checkout-btn");
+
+// bulk modal elements (for large quantity purchases)
+const bulkModal = document.getElementById("bulkModal");
+const bulkForm = document.getElementById("bulkForm");
+const bulkCancel = document.getElementById("bulkCancel");
 
 let cart = JSON.parse(localStorage.getItem("cart")) || [];
 
 // Hàm lưu cart vào localStorage
 function saveCart() {
   localStorage.setItem("cart", JSON.stringify(cart));
+}
+
+// Small toast helper using existing .notify element
+function showNotify(text, duration = 2000) {
+  const toast = document.querySelector(".notify");
+  if (!toast) return;
+  const textEl = toast.querySelector(".notify__text");
+  if (textEl) textEl.textContent = text;
+  toast.style.display = "flex";
+  toast.style.transform = "translateX(0)";
+  clearTimeout(toast._hideTimeout);
+  toast._hideTimeout = setTimeout(() => {
+    toast.style.transform = "translateX(120%)";
+    setTimeout(() => {
+      toast.style.display = "none";
+    }, 300);
+  }, duration);
+}
+
+// Get total quantity helper
+function getTotalQuantity() {
+  return cart.reduce((sum, it) => {
+    const q =
+      typeof it.quantity === "number"
+        ? it.quantity
+        : parseInt(it.quantity) || 0;
+    return sum + q;
+  }, 0);
 }
 
 // Mở / đóng giỏ hàng
@@ -110,19 +144,20 @@ function updateQuantity(index, value) {
   }
 
   if (newValue >= 100) {
-    let ktra = confirm(
-      "Bạn mua nhiều số lượng quá , liên hệ với shop để tư vấn nha <3 "
-    );
-    if (!ktra) {
-      // Nếu không đồng ý, xóa sản phẩm
-      cart.splice(index, 1);
-      alert("rất tiếc , bạn không thể mua hàng của chúng tôi !");
-    } else {
-      alert(
-        "bạn để lại số điện thoại để mình lấy thông tin chốt đơn cho bạn nhá !"
-      );
-      prompt("mời bạn nhập số điện thoại ");
+    // For large quantities, open the bulk contact form instead of alerts
+    // mark bulkConfirmed false until user submits the form
+    localStorage.setItem("bulkConfirmed", "false");
+    if (bulkModal) bulkModal.style.display = "flex";
+    // hide cart/checkout while user fills the bulk form
+    if (cartOverlay) cartOverlay.style.display = "none";
+    // disable checkout until confirmation
+    if (checkoutBtn) {
+      checkoutBtn.disabled = true;
+      checkoutBtn.style.opacity = 0.5;
     }
+    // focus phone input for convenience
+    const phoneEl = document.getElementById("bulkPhone");
+    if (phoneEl) phoneEl.focus();
   }
   renderCart();
 }
@@ -131,6 +166,68 @@ function updateQuantity(index, value) {
 function removeItem(index) {
   cart.splice(index, 1);
   renderCart();
+}
+
+// Bulk modal handlers (submit / cancel)
+if (bulkForm) {
+  bulkForm.addEventListener("submit", function (e) {
+    e.preventDefault();
+    const name = document.getElementById("bulkName").value.trim();
+    const phone = document.getElementById("bulkPhone").value.trim();
+    const email = document.getElementById("bulkEmail").value.trim();
+    if (!name || !phone) {
+      showNotify(
+        "Vui lòng nhập họ tên và số điện thoại để cửa hàng liên hệ",
+        2500
+      );
+      return;
+    }
+    const contact = { name, phone, email };
+    localStorage.setItem("bulkContact", JSON.stringify(contact));
+    localStorage.setItem("bulkConfirmed", "true");
+    // close modal, re-open cart so user can continue checkout
+    if (bulkModal) bulkModal.style.display = "none";
+    if (checkoutBtn) {
+      checkoutBtn.disabled = false;
+      checkoutBtn.style.opacity = 1;
+    }
+    if (cartOverlay) cartOverlay.style.display = "flex";
+    renderCart();
+    showNotify("Cảm ơn! Cửa hàng sẽ liên hệ với bạn để xác nhận đơn hàng.");
+  });
+}
+
+if (bulkCancel) {
+  bulkCancel.addEventListener("click", function () {
+    // close modal and keep cart closed; user can reopen cart manually
+    if (bulkModal) bulkModal.style.display = "none";
+    if (cartOverlay) cartOverlay.style.display = "none";
+    // keep checkout disabled until user submits contact info
+    if (checkoutBtn) {
+      checkoutBtn.disabled = true;
+      checkoutBtn.style.opacity = 0.5;
+    }
+  });
+}
+
+// Checkout button behavior: only show bulk modal on checkout if needed
+if (checkoutBtn) {
+  checkoutBtn.addEventListener("click", function (e) {
+    const totalQty = getTotalQuantity();
+    const bulkConfirmed = localStorage.getItem("bulkConfirmed") === "true";
+    if (totalQty >= 100 && !bulkConfirmed) {
+      // hide cart and show bulk modal for confirmation
+      if (cartOverlay) cartOverlay.style.display = "none";
+      if (bulkModal) bulkModal.style.display = "flex";
+      // disable checkout until confirmed
+      checkoutBtn.disabled = true;
+      checkoutBtn.style.opacity = 0.5;
+      return;
+    }
+
+    // proceed to checkout (placeholder) - implement real checkout here
+    showNotify("Tiếp tục tới thanh toán...");
+  });
 }
 
 // tìm kiếm
@@ -213,7 +310,7 @@ function performSearch() {
         }, 300); // allow transform to finish
       }, 2000);
     } else {
-      alert("Sản phẩm không tồn tại");
+      showNotify("Sản phẩm không tồn tại", 2000);
     }
   }
 }
@@ -541,7 +638,7 @@ window.addEventListener("click", (e) => {
 // Khi ấn "Thêm vào giỏ hàng"
 addToCartBtn.addEventListener("click", () => {
   if (!selectedSize) {
-    alert("Vui lòng chọn size giày!");
+    showNotify("Vui lòng chọn size giày!", 2000);
     return;
   }
 

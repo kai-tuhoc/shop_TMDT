@@ -1148,8 +1148,23 @@ button.delete {
   transition: all 0.3s ease;
 }
 
+.header-input {
+  position: relative;
+  display: inline-block;
+}
+.header-search_input {
+  padding-right: 42px;
+}
+.header-icon-input {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: auto;
+}
+
 .header-icon-input:hover {
-  transform: scale(1.1);
+  transform: translateY(-50%) scale(1.05);
   color: #ff6b00;
 }
 
@@ -1197,6 +1212,26 @@ button.delete {
 .notify__text {
   color: #fff;
   font-weight: 600;
+}
+
+/* Bulk modal reuse .modal styling but make content narrower */
+#bulkModal .modal-dialog {
+  max-width: 520px;
+  margin: 40px auto;
+}
+#bulkModal .modal-content {
+  padding: 20px;
+}
+#bulkModal .login-input {
+  display: block;
+  width: 100%;
+  margin: 8px 0;
+  padding: 10px;
+}
+#bulkModal .login-btn {
+  background: #ff8a00;
+  color: white;
+  border: none;
 }
 
 /* Product Card Animation */
