@@ -92,6 +92,19 @@
                 placeholder="Tìm kiếm "
               />
               <i class="fa-solid fa-magnifying-glass header-icon-input"></i>
+              <!-- Search dropdown: history + suggestions -->
+              <div class="search-dropdown" aria-hidden="true">
+                <div class="search-history">
+                  <div class="history-header">
+                    <span>Lịch sử tìm kiếm</span>
+                    <button class="clear-history">Xóa</button>
+                  </div>
+                  <ul class="history-list"></ul>
+                </div>
+                <div class="search-suggestions">
+                  <ul class="suggestion-list"></ul>
+                </div>
+              </div>
             </div>
           </div>
 
@@ -106,6 +119,13 @@
     </header>
 
     <main>
+      <!-- Continuous product carousel (auto-scroll) -->
+      <div class="container-fluid" style="width: 80%; margin: 18px auto 0">
+        <div id="productCarousel" class="product-carousel" aria-hidden="false">
+          <div class="carousel-track"></div>
+        </div>
+      </div>
+
       <div class="container-fluid main_wrap">
         <div class="info">
           <div class="info-wrap">
